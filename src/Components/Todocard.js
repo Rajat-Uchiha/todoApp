@@ -1,9 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 export default function Todocard() {
 
+    //Functions to get data from the localStorage after refreshing the page
+    const getTodoData = () => {
+        const todos = localStorage.getItem("Mytodolist"); //Retriving the data from the localstorage
+        if (todos) {
+            return JSON.parse(todos);
+        }
+        return [];
+    }
+    const getCompletedData = () => {
+        const Completed = localStorage.getItem("MyCompletedTasks"); //Retriving the data from the localstorage
+        if (Completed) {
+            return JSON.parse(Completed);
+        }
+        return [];
+    }
+
     const [userData, setuserData] = useState("");
-    const [items, setItems] = useState([]);
-    const [CompletedTask, setCompletedTask] = useState([]);
+    const [items, setItems] = useState(getTodoData);
+    const [CompletedTask, setCompletedTask] = useState(getCompletedData);
 
     //Function to take the input value and store it in the state;
     const addItem = (e) => {
@@ -11,6 +27,7 @@ export default function Todocard() {
             e.preventDefault();
             setuserData(e.target.value);
             saveItems();
+            setuserData("");
         }
     }
 
@@ -25,7 +42,6 @@ export default function Todocard() {
                 name: userData
             };
             setItems([myNewData, ...items]);
-
         }
     }
 
@@ -38,6 +54,27 @@ export default function Todocard() {
 
         setItems(updateElem);
     };
+
+    // Function to remove all the tasks
+    const removeAll = () => {
+        setItems([]); //Passed an empty array
+        setCompletedTask([]); //Passed an empty array
+    }
+
+    //Function to store Data in the local Storage using useEffect
+
+    useEffect(() => {
+        localStorage.setItem("Mytodolist", JSON.stringify(items));
+    }, [items]);
+
+    useEffect(() => {
+        localStorage.setItem("MyCompletedTasks", JSON.stringify(CompletedTask));
+    }, [CompletedTask]);
+
+
+
+
+
 
     return (
         <>
@@ -63,7 +100,9 @@ export default function Todocard() {
                             onKeyPress={addItem}
 
                             id="name" name="name" placeholder='Add items...' className="w-4/5 mx-1 bg-gray-100 bg-opacity-50 rounded border-2 border-indigo-400 focus:border-indigo-500 focus:bg-white text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
-                        <button className='border-2 font-medium mx-1 py-2 px-6 rounded-md border-indigo-400 hover:bg-indigo-100' >Clear All</button>
+
+                        {/* //Clear All button */}
+                        <button onClick={removeAll} className='border-2 font-medium mx-1 py-2 px-6 rounded-md border-indigo-400 hover:bg-indigo-100' >Clear All</button>
                     </div>
 
 
