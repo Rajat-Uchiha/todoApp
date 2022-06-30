@@ -1,6 +1,6 @@
 {
   "name": "todoapp",
-  "homepage": "http://rajat-uchiha.github.io/todoapp", 
+  "homepage": "http://rajat-uchiha.github.io/todoapp",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
